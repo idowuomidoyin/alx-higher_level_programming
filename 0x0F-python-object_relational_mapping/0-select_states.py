@@ -4,31 +4,24 @@ This script lists all states from the
 dta
 authr- omidoyin"""
 
-import MySQLdb
 import sys
+import MySQLdb as db
 
-def list_states(username, password, database):
-    # Connect to the MySQL server
-    db = MySQLdb.connect(host='localhost', port=3306, user=username, passwd=password, db=database)
-    cursor = db.cursor()
 
-    # execute the SQL query to fetch al states
-    cursor.execute("SELECT * FROM states ORDER BY id ASC")
+def connect_and_query() -> None:
 
-    # Fetch all the rows from the query result
-    rows = cursor.fetchall()
+    """Connect to the database and execute query"""
+    try:
+        cnx = db.connect(user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
+        cursor = cnx.cursor(cursorclass=db.cursors.Cursor)
+        cursor.execute('SELECT * FROM states ORDER BY `id` ASC;')
+        states = cursor.fetchall()
 
-    # Print the results
-    for row in rows:
-        print(row)
+        for state in states:
+            print(state)
+    except Exception as e:
+        return (e)
 
-    # Close the data connection
-    db.close()
 
-# Example of usage
 if __name__ == "__main__":
-    username = sys.argv[1]
-    password = sys.argv[2]
-    database = sys.argv[3]
-
-    list_states(username, password, database)
+    connect_and_query()
