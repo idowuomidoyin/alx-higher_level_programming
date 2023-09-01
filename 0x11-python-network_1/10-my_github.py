@@ -4,14 +4,13 @@ and uses the Github API to display my ID
 author-omidoyin
 """
 
+from requests import get, auth
 import sys
-import requests
-from requests.auth import HTTPBasicAuth
+
 
 if __name__ == "__main__":
-    username = sys.argv[1]
+    url = 'https://api.github.com/user'
+    user = sys.argv[1]
     password = sys.argv[2]
-
-    token = HTTPBasicAuth(username, password)
-    request = requests.get('https://api.github.com/user', auth=token)
-    print(request.json().get('id'))
+    r = get(url, auth=auth.HTTPBasicAuth(user, password))
+    print(r.json().get('id'))
